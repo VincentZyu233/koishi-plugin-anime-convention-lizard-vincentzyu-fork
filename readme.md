@@ -2,6 +2,13 @@
 
 [![npm](https://img.shields.io/npm/v/koishi-plugin-anime-convention-lizard?style=flat-square)](https://www.npmjs.com/package/koishi-plugin-anime-convention-lizard)
 
+## 🔗 后端 API
+本插件的后端 API 开源地址：[allcpp-search-go](https://github.com/VincentZyu233/allcpp-search-go)
+
+可自行部署或使用我提供的默认 API。
+仓库release里面有二进制 直接运行即可。
+---
+
 # 🎉 开箱即用的漫展查询插件
 
 ## 预览
