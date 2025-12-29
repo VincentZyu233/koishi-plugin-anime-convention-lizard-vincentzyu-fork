@@ -6,80 +6,97 @@ export const inject = {
   required: ['database'],
   optional: ['puppeteer'],
 };
+
 export const name = 'anime-convention-lizard-vincentzyu-fork';
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+const pkg = JSON.parse(
+  readFileSync(resolve(__dirname, '../package.json'), 'utf-8')
+)
+
 export const usage = `
-# 🎉 开箱即用的漫展查询插件
+<h1>Koishi 插件：anime-convention-lizard-vincentzyu-fork 漫展查询</h1>
+<h2>🎯 插件版本：<span style="color: #ff6b6b; font-weight: bold;">v${pkg.version}</span></h2>
 
-## 简介
-- **anime-convention-lizard-vincentzyu-fork** 是一款针对漫展查询与订阅的 Koishi 插件，对接无差别同人站/CPP，通过简单的指令快速查询城市或主题相关的漫展，并提供订阅与管理功能。
+> **上游仓库**：[https://github.com/lizard0126/anime-convention-lizard](https://github.com/lizard0126/anime-convention-lizard)
 
----
-
-## 使用方法
-
-### 通过关键词查询漫展
-#### 示例：
-\`\`\`
-漫展 查询 南京    // 查询南京的漫展
-漫展 查询 东方    // 查询与东方相关的漫展
-\`\`\`
-
-### 一键查询所有订阅的漫展
-#### 示例：
-\`\`\`
-漫展 一键查询    // 查询所有已订阅关键词的漫展
-\`\`\`
-
-### 🖼️ 图片查询（需开启配置并安装 puppeteer）
-#### 示例：
-\`\`\`
-漫展 图片查询 南京    // 以图片形式展示查询结果
-漫展 一键图片查询     // 以图片形式展示所有订阅的漫展
-\`\`\`
-
-### 订阅漫展关键词
-#### 示例：
-\`\`\`
-漫展 订阅 南京    // 订阅南京的漫展
-漫展 订阅 东方    // 订阅与东方相关的漫展
-\`\`\`
-
-### 取消订阅漫展关键词
-#### 示例：
-\`\`\`
-漫展 取消订阅 南京    // 取消订阅南京的漫展
-漫展 取消订阅         // 取消所有订阅
-\`\`\`
-
-### 查看当前订阅列表
-#### 示例：
-\`\`\`
-漫展 订阅列表    // 查看当前订阅的关键词列表
-\`\`\`
+## 💬 反馈与交流
+- **QQ 交流群**：<b style="color: #50c878;">259248174</b>
 
 ---
 
-## 反馈建议或报告问题
+## 🎉 开箱即用的漫展查询插件
+**anime-convention-lizard-vincentzyu-fork** 是一款针对漫展查询与订阅的 Koishi 插件。对接 **无差别同人站 (www.allcpp.cn)**，通过简单的指令快速查询城市或主题相关的漫展，并提供订阅与管理功能。
 
-可以[点这里](https://github.com/lizard0126/anime-convention-lizard/issues)创建议题~
+---
 
-## 如果喜欢我的插件
+## ✨ 特性
+- 🔍 **多维查询**：支持按城市名或漫展主题关键词进行搜索。
+- 📅 **订阅系统**：订阅感兴趣的关键词，一键获取所有关注城市的漫展动态。
+- 🖼️ **精美渲染**：支持通过 Puppeteer 将查询结果渲染为精美图片（可选）。
+- 🔤 **自定义字体**：支持加载本地字体文件，让图片渲染更符合你的审美。
+- 🚀 **自托管后端**：支持配置自定义后端 API，稳定可靠。
 
-可以[请我喝可乐](https://ifdian.net/a/lizard0126)，没准就有动力更新新功能了~
+## 🔍 预览
+[你可以前往README查看预览图片 → https://gitee.com/vincent-zyu/koishi-plugin-anime-convention-lizard-vincentzyu-fork](https://gitee.com/vincent-zyu/koishi-plugin-anime-convention-lizard-vincentzyu-fork) 
+
+---
+
+## 📦 安装与依赖
+### 🛠️ 前置依赖
+- <b style="color: #f44336; font-size: 1.2em;">必须依赖</b>：\`database\` (用于存储订阅信息)
+- <b style="color: #ff9800; font-size: 1.2em;">可选依赖</b>：\`puppeteer\` (用于图片渲染功能)
+  - **推荐安装**：\`koishi-plugin-puppeteer\` 或 \`@shangxueink/koishi-plugin-puppeteer-without-canvas\`
+  - **安装方式**：
+    - 🧩 **webui**：在 左侧 \`依赖管理\` 中直接搜索包名安装。
+    - 💻 **命令行**：\`npm install 包名\` 或 \`yarn add 包名\`。
+
+---
+
+## ⚙️ 配置说明
+
+### 🔗 后端 API
+本插件默认使用作者提供的公共 API。如果你希望自托管后端，可以前往 [allcpp-search-go](https://github.com/VincentZyu233/allcpp-search-go) 下载。
+
+### 🔤 字体设置
+你可以手动下载字体文件，并在插件配置项中填写字体的**绝对路径**。
+
+**推荐字体：**
+- [落霞孤鹜文楷 LXGW WenKai Mono → *(https://gitee.com/vincent-zyu/koishi-plugin-onebot-info-image/releases/download/font/LXGWWenKaiMono-Regular.ttf)* ](https://gitee.com/vincent-zyu/koishi-plugin-onebot-info-image/releases/download/font/LXGWWenKaiMono-Regular.ttf)
+- [思源宋体 Source Han Serif SC → *(https://gitee.com/vincent-zyu/koishi-plugin-onebot-info-image/releases/download/font/SourceHanSerifSC-Medium.otf)* ](https://gitee.com/vincent-zyu/koishi-plugin-onebot-info-image/releases/download/font/SourceHanSerifSC-Medium.otf)
+
+> 💡 **提示**：如未填写或路径无效，将自动回退为系统默认字体。
+
+---
+
+## 📖 使用方法
+
+### 🔍 漫展查询
+- \`漫展 查询 <关键词>\`：查询指定城市或主题的漫展
+- \`漫展 一键查询\`：查询所有已订阅关键词的漫展
+- \`漫展 图片查询 <关键词>\`：以图片形式展示查询结果
+- \`漫展 一键图片查询\`：以图片形式展示所有订阅结果
+
+### 📌 订阅管理
+- \`漫展 订阅 <关键词>\`：订阅指定关键词
+- \`漫展 取消订阅 <关键词>\`：取消订阅指定关键词
+- \`漫展 取消订阅\`：清空所有订阅
+- \`漫展 订阅列表\`：查看当前订阅的关键词
+
+---
+
+## ☕ 原作者留下的
+如果这个插件对你有帮助，可以[请我喝杯可乐🥤 → *(https://ifdian.net/a/lizard0126)* ](https://ifdian.net/a/lizard0126)
 `;
 
-// export const Config = Schema.object({
-//   apiUrl: Schema.string()
-//     .default('http://192.168.31.241:51225/search')
-//     .description('默认API请勿更改'),
-// });
 
 export const Config = Schema.intersect([
 
   Schema.object({
     apiUrl: Schema.string()
     .default('http://xwl.vincentzyu233.cn:51225/search')
-    .description('默认API请勿更改'),
+    .role('textarea', { rows: [2, 5] })
+    .description('后端api地址'),
   }).description('后端api设置'),
 
   Schema.object({
