@@ -95,6 +95,23 @@ export const Config = Schema.intersect([
     enableImageBatchQuery: Schema.boolean()
       .default(false)
       .description('是否注册「漫展 一键图片查询」指令（需要 puppeteer 服务）'),
+    imageDisplayMode: Schema.union([
+      Schema.const('none').description('【模式1】不展示图片'),
+      Schema.const('compact').description('【模式2】左侧展示 4:3 图片（高度不占满）'),
+      Schema.const('gradient').description('【模式3】左侧展示渐变背景图（高度占满，从左到右逐渐透明模糊）'),
+      Schema.const('flip-horizontal').description('【模式4】全背景（模式3基础上增加水平翻转填充全背景）'),
+      Schema.const('full-blur-bg-text').description('【模式5】全背景 + 文字覆盖（模式4基础上文字左对齐并增加整体模糊）'),
+    ])
+      .role('radio')
+      .default('gradient')
+      .description('漫展图片搜索列表的图片展示模式'),
+    customFontPath: Schema.string()
+      .default('')
+      .role('textarea', { rows: [2, 5] })
+      .description('可选：绝对路径的自定义字体文件，无法读取时自动回退默认字体'),
+    enableDarkMode: Schema.boolean()
+      .default(false)
+      .description('是否启用深色模式'),
     imageType: Schema.union([
       Schema.const('png').description('PNG 格式'),
       Schema.const('jpeg').description('JPEG 格式'),
@@ -137,6 +154,12 @@ export function apply(ctx: Context, config: any) {
 
   // 检查 puppeteer 是否可用
   const hasPuppeteer = () => !!ctx.puppeteer;
+  const resolveCustomFontPath = () => {
+    const rawPath = config.customFontPath
+    if (typeof rawPath !== 'string') return undefined
+    const trimmed = rawPath.trim()
+    return trimmed ? trimmed : undefined
+  }
 
   ctx.command('漫展', '漫展查询和订阅管理')
     .subcommand('.查询 <keyword>', '查询漫展')
@@ -204,12 +227,18 @@ export function apply(ctx: Context, config: any) {
           }
 
           const events: EventData[] = response.data;
+          const customFontPath = resolveCustomFontPath()
           const screenshot = await renderEventsImage(
             ctx,
             `漫展查询：${keyword}`,
             events,
             config.imageType || 'png',
-            config.screenshotQuality || 80
+            config.screenshotQuality || 80,
+            config.enableDarkMode || false,
+            800,
+            900,
+            config.imageDisplayMode || 'compact',
+            customFontPath
           );
 
           // 存入缓存，标记为图片模式
@@ -276,12 +305,18 @@ export function apply(ctx: Context, config: any) {
             return;
           }
 
+          const customFontPath = resolveCustomFontPath()
           const screenshot = await renderEventsImage(
             ctx,
             '订阅漫展一键查询',
             allResults,
             config.imageType || 'png',
-            config.screenshotQuality || 80
+            config.screenshotQuality || 80,
+            config.enableDarkMode || false,
+            800,
+            900,
+            config.imageDisplayMode || 'compact',
+            customFontPath
           );
 
           // 存入缓存，标记为图片模式
@@ -398,11 +433,14 @@ export function apply(ctx: Context, config: any) {
     // 如果是图片模式，渲染图片返回
     if (userCache.imageMode && hasPuppeteer()) {
       try {
+        const customFontPath = resolveCustomFontPath()
         const screenshot = await renderEventDetailImage(
           ctx,
           selectedItem,
           config.imageType || 'png',
-          config.screenshotQuality || 80
+          config.screenshotQuality || 80,
+          config.enableDarkMode || false,
+          customFontPath
         );
         await session.send(`${config.addQuote ? h.quote(session.messageId) : ''}${h.image(`data:image/${config.imageType || 'png'};base64,${screenshot}`)}`);
       } catch (error) {
